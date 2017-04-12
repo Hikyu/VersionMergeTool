@@ -27,13 +27,48 @@
 
 参考App.java
 
+- 1
+
+  // 初始化合并工具
+
+  VersionMergeTool tool = new VersionMergeTool();
+
+- 2
+
+  // 添加合并的目标文件夹
+
+  // oldVer: 旧版本文件夹(dbeaver3.7.5)
+
+  // newVer: 新版本文件夹(dbeaver3.7.8)
+
+  // mergeTo: 目标文件夹(dbstudio)
+
+  // false: 只打印分析结果，true则自动合并
+
+  // 可多次执行addToMergeVersion, 合并工作将顺序执行
+
+  tool.addToMergeVersion(oldVer, newVer, mergeTo, false);
+
+  tool.addToMergeVersion(oldVer, newVer, mergeTo, false);
+
+  ....
+
+- 3
+
+  // 执行
+
+  tool.doMerge();
+
+- 4
+
+  打印结果
 ```
-*******************************
-*******************************
-************************listToCopy******************************
+****************************************************************
 oldVersion : Y:\dbaeaver\dbeaver-3.7.5\features\
 newVersion : Y:\dbaeaver\dbeaver-3.7.8\features\
 mergeTo : Y:\code\dbstudio\features\
+****************************************************************
+************************listToCopy******************************
 File Size: 25
 org.jkiss.dbeaver.ext.generic.feature\pom.xml
 org.jkiss.dbeaver.runtime.feature\pom.xml
@@ -62,9 +97,6 @@ org.jkiss.dbeaver.ext.wmi.feature\feature.xml
 org.jkiss.dbeaver.core.feature\feature.properties
 auto merge complete!
 ************************listToManualMerge******************************
-oldVersion : Y:\dbaeaver\dbeaver-3.7.5\features\
-newVersion : Y:\dbaeaver\dbeaver-3.7.8\features\
-mergeTo : Y:\code\dbstudio\features\
 File Size: 11
 org.jkiss.dbeaver.ce.feature\feature.properties
 org.jkiss.dbeaver.ext.exasol.feature\build.properties

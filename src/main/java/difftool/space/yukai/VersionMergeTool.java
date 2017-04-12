@@ -25,6 +25,7 @@ import difftool.space.yukai.utils.FileUtils;
  * 3. 找出list1与list2的交集，这部分是可以直接从3.7.8复制到Dbstudio的，也是可以实现工具自动化更新到 部分
  * 4. 找出list2中存在而list1中没有的文件list3，这部分文件是我们需要手动修改的文件
  * 
+ * 线程不安全
  * @author kyu
  * @date 2017年4月11日
  */
@@ -40,16 +41,29 @@ public class VersionMergeTool {
 		allCopyFailedFiles = new ConcurrentHashMap<String, String>();
 	}
 
-	public void addToMergeVersion(String oldVersion, String newVersion, String toMerge) {
-		toMergeFiles.add(new MergeTool(toMerge, newVersion, oldVersion));
+	/**
+	 * 添加合并文件
+	 * 2017年4月12日 
+	 * @param oldVersion
+	 * @param newVersion
+	 * @param toMerge
+	 * @param autoMerge 是否自动合并
+	 */
+	public void addToMergeVersion(String oldVersion, String newVersion, String toMerge, boolean autoMerge) {
+		toMergeFiles.add(new MergeTool(toMerge, newVersion, oldVersion, autoMerge));
 	}
-
+	
+	public void addToMergeVersion(String oldVersion, String newVersion, String toMerge) {
+		addToMergeVersion(oldVersion, newVersion, toMerge, false);
+	}
+	
 	public void doMerge() {
 		for (MergeTool tool : toMergeFiles) {
 			System.out.println("**********************************************************************");
 			System.out.println(tool.toString());
 			System.out.println("**********************************************************************");
 			tool.merge();
+			allCopyFailedFiles.putAll(tool.copyFailedFiles);
 		}
 	}
 	
@@ -62,15 +76,17 @@ public class VersionMergeTool {
 	}
 
 	class MergeTool {
-		private String dbstudioPath;
-		private String dbeaver_old_path;
-		private String dbeaver_new_path;
-		private Map<String, String> copyFailedFiles;
+		private final String dbstudioPath;
+		private final String dbeaver_old_path;
+		private final String dbeaver_new_path;
+		private final Map<String, String> copyFailedFiles;
+		private final boolean autoMerge;
 
-		public MergeTool(String dbstudioPath, String dbeaver_new_path, String dbeaver_old_path) {
+		public MergeTool(String dbstudioPath, String dbeaver_new_path, String dbeaver_old_path, boolean autoMerge) {
 			this.dbeaver_new_path = dbeaver_new_path;
 			this.dbeaver_old_path = dbeaver_old_path;
 			this.dbstudioPath = dbstudioPath;
+			this.autoMerge = autoMerge;
 			copyFailedFiles = new HashMap<>();
 		}
 
@@ -104,7 +120,10 @@ public class VersionMergeTool {
 		}
 
 		/**
-		 * 拷贝listToCopy中的文件 src: 新版本文件 dest： Dbstudio对应文件 2017年4月11日
+		 * 拷贝listToCopy中的文件 
+		 * src: 新版本文件 
+		 * dest： Dbstudio对应文件 
+		 * 2017年4月11日
 		 * 
 		 * @param listToCopy
 		 */
@@ -112,29 +131,31 @@ public class VersionMergeTool {
 			StringBuilder msg = new StringBuilder();
 			msg.append("************************listToCopy******************************").append("\n");
 			printList(listToCopy, msg.toString());
-
-			String srcPath = null, destPath = null;
-			try {
-				for (String filePath : listToCopy) {
-					srcPath = dbeaver_new_path + filePath;
-					destPath = dbstudioPath + filePath;
-					FileUtils.copyFile(srcPath, destPath);
-				}
-			} catch (IOException e) {
-				String msg1 = dbstudioPath + "\n" + dbeaver_new_path + "\n" + dbeaver_old_path;
-				logger.error(msg1, e);
-				copyFailedFiles.put(srcPath, destPath);
-			}
 			
-			System.out.println("auto merge complete!");
-			if (!copyFailedFiles.isEmpty()) {
-				System.out.println("合并失败文件>>>>");
-				Iterator<Entry<String, String>> iterator = copyFailedFiles.entrySet().iterator();
-				while (iterator.hasNext()) {
-					Entry<String, String> next = iterator.next();
-					String key = next.getKey();
-					String value = next.getValue();
-					System.out.println(key + "   TO   " + value);
+			if (autoMerge) {
+				String srcPath = null, destPath = null;
+				try {
+					for (String filePath : listToCopy) {
+						srcPath = dbeaver_new_path + filePath;
+						destPath = dbstudioPath + filePath;
+						FileUtils.copyFile(srcPath, destPath);
+					}
+				} catch (IOException e) {
+					String errMsg = dbstudioPath + "\n" + dbeaver_new_path + "\n" + dbeaver_old_path;
+					logger.error(errMsg, e);
+					copyFailedFiles.put(srcPath, destPath);
+				}
+				
+				System.out.println("auto merge complete!");
+				if (!copyFailedFiles.isEmpty()) {
+					System.out.println("合并失败文件>>>>");
+					Iterator<Entry<String, String>> iterator = copyFailedFiles.entrySet().iterator();
+					while (iterator.hasNext()) {
+						Entry<String, String> next = iterator.next();
+						String key = next.getKey();
+						String value = next.getValue();
+						System.out.println(key + "   TO   " + value);
+					}
 				}
 			}
 		}
