@@ -27,4 +27,56 @@
 
 参考App.java
 
+```
+*******************************
+*******************************
+************************listToCopy******************************
+oldVersion : Y:\dbaeaver\dbeaver-3.7.5\features\
+newVersion : Y:\dbaeaver\dbeaver-3.7.8\features\
+mergeTo : Y:\code\dbstudio\features\
+File Size: 25
+org.jkiss.dbeaver.ext.generic.feature\pom.xml
+org.jkiss.dbeaver.runtime.feature\pom.xml
+org.jkiss.dbeaver.runtime.feature\feature.xml
+org.jkiss.dbeaver.ext.mysql.feature\feature.properties
+org.jkiss.dbeaver.ext.db2.feature\feature.properties
+org.jkiss.dbeaver.standalone.feature\feature.properties
+org.jkiss.dbeaver.ext.generic.feature\feature.properties
+org.jkiss.dbeaver.standalone.feature\pom.xml
+org.jkiss.dbeaver.ext.mysql.feature\pom.xml
+org.jkiss.dbeaver.ext.db2.feature\pom.xml
+org.jkiss.dbeaver.ext.oracle.feature\feature.properties
+org.jkiss.dbeaver.ext.wmi.feature\feature.properties
+org.jkiss.dbeaver.ext.generic.feature\feature.xml
+org.jkiss.dbeaver.rcp.feature\pom.xml
+org.jkiss.dbeaver.ext.db2.feature\feature.xml
+org.jkiss.dbeaver.core.feature\pom.xml
+org.jkiss.dbeaver.rcp.feature\feature.xml
+org.jkiss.dbeaver.ext.wmi.feature\pom.xml
+org.jkiss.dbeaver.ext.oracle.feature\feature.xml
+org.jkiss.dbeaver.runtime.feature\feature.properties
+org.jkiss.dbeaver.ext.mysql.feature\feature.xml
+org.jkiss.dbeaver.ext.oracle.feature\pom.xml
+org.jkiss.dbeaver.core.feature\feature.xml
+org.jkiss.dbeaver.ext.wmi.feature\feature.xml
+org.jkiss.dbeaver.core.feature\feature.properties
+auto merge complete!
+************************listToManualMerge******************************
+oldVersion : Y:\dbaeaver\dbeaver-3.7.5\features\
+newVersion : Y:\dbaeaver\dbeaver-3.7.8\features\
+mergeTo : Y:\code\dbstudio\features\
+File Size: 11
+org.jkiss.dbeaver.ce.feature\feature.properties
+org.jkiss.dbeaver.ext.exasol.feature\build.properties
+org.jkiss.dbeaver.ext.exasol.feature\.project
+org.jkiss.dbeaver.ext.exasol.feature\feature.xml
+org.jkiss.dbeaver.standalone.feature\feature.xml
+org.jkiss.dbeaver.ext.exasol.feature\pom.xml
+org.jkiss.dbeaver.ce.feature\build.properties
+org.jkiss.dbeaver.ce.feature\pom.xml
+org.jkiss.dbeaver.ce.feature\feature.xml
+org.jkiss.dbeaver.ce.feature\root\Info.plist
+org.jkiss.dbeaver.ext.exasol.feature\feature.properties
+```
+
 
