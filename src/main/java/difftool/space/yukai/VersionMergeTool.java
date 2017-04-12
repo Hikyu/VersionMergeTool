@@ -46,8 +46,9 @@ public class VersionMergeTool {
 
 	public void doMerge() {
 		for (MergeTool tool : toMergeFiles) {
-			System.out.println("*******************************");
-			System.out.println("*******************************");
+			System.out.println("**********************************************************************");
+			System.out.println(tool.toString());
+			System.out.println("**********************************************************************");
 			tool.merge();
 		}
 	}
@@ -81,6 +82,15 @@ public class VersionMergeTool {
 			autoMerge(listToCopy);
 			manualMerge(listToManualMerge);
 		}
+		
+		@Override
+		public String toString() {
+			StringBuilder msg = new StringBuilder();
+			msg.append("oldVersion : " + dbeaver_old_path).append("\n");
+			msg.append("newVersion : " + dbeaver_new_path).append("\n");
+			msg.append("mergeTo : " + dbstudioPath).append("\n");
+			return msg.toString();
+		}
 
 		/**
 		 * 打印listToManualMerge中的文件 2017年4月11日
@@ -90,9 +100,6 @@ public class VersionMergeTool {
 		private void manualMerge(Set<String> listToManualMerge) {
 			StringBuilder msg = new StringBuilder();
 			msg.append("************************listToManualMerge******************************").append("\n");
-			msg.append("oldVersion : " + dbeaver_old_path).append("\n");
-			msg.append("newVersion : " + dbeaver_new_path).append("\n");
-			msg.append("mergeTo : " + dbstudioPath);
 			printList(listToManualMerge, msg.toString());
 		}
 
@@ -104,9 +111,6 @@ public class VersionMergeTool {
 		private void autoMerge(Set<String> listToCopy) {
 			StringBuilder msg = new StringBuilder();
 			msg.append("************************listToCopy******************************").append("\n");
-			msg.append("oldVersion : " + dbeaver_old_path).append("\n");
-			msg.append("newVersion : " + dbeaver_new_path).append("\n");
-			msg.append("mergeTo : " + dbstudioPath);
 			printList(listToCopy, msg.toString());
 
 			String srcPath = null, destPath = null;
