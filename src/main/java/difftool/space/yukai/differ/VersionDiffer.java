@@ -1,4 +1,4 @@
-package difftool.space.yukai;
+package difftool.space.yukai.differ;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -8,9 +8,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import difftool.space.yukai.differ.CountableThreadPool;
-import difftool.space.yukai.differ.FileDiffer;
-import difftool.space.yukai.differ.Processor;
 import difftool.space.yukai.entity.DiffVersionHandler;
 import difftool.space.yukai.scheduler.QueueScheduler;
 import difftool.space.yukai.scheduler.Scheduler;
@@ -38,11 +35,10 @@ public class VersionDiffer {
 	private CountableThreadPool pool;
 	/* 针对旧版本，新版本与旧版本内容相同的文件集合   支持并发*/
 	private Set<String> sameFiles;
-	/*
-	 * 针对旧版本，新版本与旧版本内容不同的文件集合，包括： 1. 新版本有，旧版本没有的文件 2. 新旧版本不同的文件
-	 *  支持并发
-	 */
+	/* 针对旧版本，新版本与旧版本内容不同的文件集合 支持并发 */
 	private Set<String> diffFiles;
+	/* 新版本有，旧版本没有的文件集合 支持并发*/
+	private Set<String> outOfDateFiles;
 	/* 旧版本有而新版本没有的文件集合   支持并发*/
 	private Set<String> notExsistFiles;
 	/* 对比结果处理器*/
@@ -56,7 +52,7 @@ public class VersionDiffer {
 		private Processor processor = new Processor() {
 			
 			@Override
-			public void resultProcessor(Set<String> diffFiles, Set<String> sameFiles, Set<String> notExsistFiles) {
+			public void resultProcessor(Set<String> diffFiles, Set<String> sameFiles, Set<String> notExsistFiles, Set<String> outOfDateFiles) {
 				// do nothing
 			}
 		};
@@ -111,6 +107,7 @@ public class VersionDiffer {
 		sameFiles = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 		diffFiles = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 		notExsistFiles = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
+		outOfDateFiles = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 	}
 
 	/**
@@ -156,7 +153,7 @@ public class VersionDiffer {
 		// 关闭线程池
 		pool.shutdown();
 		// 处理对比结果
-		processor.resultProcessor(diffFiles, sameFiles, notExsistFiles);
+		processor.resultProcessor(diffFiles, sameFiles, notExsistFiles, outOfDateFiles);
 	}
 
 	/**
@@ -184,7 +181,7 @@ public class VersionDiffer {
 			HashSet<String> complement2 = new HashSet<>();
 			complement2.addAll(version2FilterPaths);
 			complement2.removeAll(version1FilterPaths);
-			diffFiles.addAll(complement2);
+			outOfDateFiles.addAll(complement2);
 			
 			//求出旧版本有，新版本没有的文件集合
 			HashSet<String> complement1 = new HashSet<>();

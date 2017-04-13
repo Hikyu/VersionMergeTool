@@ -1,8 +1,10 @@
 package difftool.space.yukai;
 
+import org.junit.Test;
+
 import difftool.space.yukai.merge.VersionMergeTool;
 
-public class App {
+public class VersionMergeToolTest {
 	private static final String mergeToRoot = "Y:\\code\\dbstudio\\";
 	private static final String newVerRoot = "Y:\\dbaeaver\\dbeaver-3.8.1\\";
 	private static final String oldVerRoot = "Y:\\dbaeaver\\dbeaver-3.7.8\\";
@@ -28,21 +30,20 @@ public class App {
 	private static final String model = "plugins\\org.jkiss.dbeaver.model\\";
 	private static final String test = "plugins\\org.jkiss.dbeaver.test\\";
 
-	public static void main(String[] args) {
+	@Test
+	public void testBackup() {
 		String[] folders = new String[] { features, db2, derby, erd, firebird, generic, import_config, informix, mssql,
 				mysql, netezza, oracle, phoenix, postgresql, teradata, vertica, wmi, intro, model, test };
-//		String[] folders = new String[] {  model, test };
 		String mergeTo, newVer, oldVer;
-		
-		String backupPath = "C:\\Users\\kyu\\Desktop\\tt\\";
-		VersionMergeTool tool = new VersionMergeTool(12,backupPath);
+		VersionMergeTool tool = new VersionMergeTool(8, "C:\\Users\\kyu\\Desktop\\tt\\");
 		
 		for (String folder : folders) {
 			mergeTo = mergeToRoot + folder;
 			newVer = newVerRoot + folder;
 			oldVer = oldVerRoot + folder;
-			tool.addToMergeVersion(oldVer, newVer, mergeTo, true);
+			tool.addToMergeVersion(oldVer, newVer, mergeTo);
 		}
-		tool.doMerge();
+		tool.doBackup();
 	}
+	
 }

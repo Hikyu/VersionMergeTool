@@ -84,4 +84,10 @@ public class FileUtils {
 		File destFile = new File(dest);
 		org.apache.commons.io.FileUtils.copyFile(srcFile, destFile);
 	}
+	
+	public static void copyDirectory(String src, String dest) throws IOException {
+		File srcDir = new File(src);
+		File destDir = new File(dest);
+		org.apache.commons.io.FileUtils.copyDirectory(srcDir, destDir);
+	}
 }

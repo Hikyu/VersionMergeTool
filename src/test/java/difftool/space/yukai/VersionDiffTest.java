@@ -10,8 +10,9 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import difftool.space.yukai.VersionDiffer.VersionDiffBuilder;
 import difftool.space.yukai.differ.Processor;
+import difftool.space.yukai.differ.VersionDiffer;
+import difftool.space.yukai.differ.VersionDiffer.VersionDiffBuilder;
 import difftool.space.yukai.utils.FileUtils;
 
 public class VersionDiffTest {
@@ -102,7 +103,7 @@ public class VersionDiffTest {
 		VersionDiffer differ = builder.threadNum(4).processor(new Processor() {
 			
 			@Override
-			public void resultProcessor(Set<String> diffFiles, Set<String> sameFiles, Set<String> notExsistFiles) {
+			public void resultProcessor(Set<String> diffFiles, Set<String> sameFiles, Set<String> notExsistFiles, Set<String> OutOfDateFiles) {
 				System.out.println("差异文件>>>>>>>>>>>>>>>>>>>>>>>>>>>" + diffFiles.size());
 				for (String string : diffFiles) {
 					System.out.println(string);
