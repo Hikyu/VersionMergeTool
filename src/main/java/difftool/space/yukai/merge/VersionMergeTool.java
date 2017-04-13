@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
@@ -185,20 +187,21 @@ public class VersionMergeTool {
 			String msg = "************************listToCopy**************************************";
 			printList(list5, msg);
 			if (autoMerge) {
-				boolean success = autoMerge(list5);
-				System.out.println("");
-				System.out.println("auto copy complete!");
-				if (!success) {
-					checkFailedFiles(copyFailedFiles);
-				}
+				Map<String, String> failedFiles = autoMerge(list5);
+				copyFailedFiles.putAll(failedFiles);
+				System.out.println("\n auto copy complete!");
 			}
 			// 升级新增部分，自动复制
 			msg = "************************listToAdd***************************************";
 			printList(list3, msg);
 			if (autoMerge) {
-				boolean success = autoMerge(list3);
-				System.out.println("");
-				System.out.println("auto add complete!");
+				Map<String, String> failedFiles = autoMerge(list3);
+				copyFailedFiles.putAll(failedFiles);
+				System.out.println("\n auto add complete!");
+			}
+			// 打印复制失败文件
+			if (!copyFailedFiles.isEmpty()) {
+				checkFailedFiles(copyFailedFiles);
 			}
 			// 升级修改部分，手动更新
 			msg = "************************listToManualMerge*******************************";
@@ -210,7 +213,7 @@ public class VersionMergeTool {
 
 		private void checkFailedFiles(Map<String, String> failedFiles) {
 			if (!failedFiles.isEmpty()) {
-				System.out.println("合并失败文件>>>>");
+				System.out.println("copy failed files>>>>");
 				Iterator<Entry<String, String>> iterator = failedFiles.entrySet().iterator();
 				while (iterator.hasNext()) {
 					Entry<String, String> next = iterator.next();
@@ -230,22 +233,21 @@ public class VersionMergeTool {
 		 * 
 		 * @param listToCopy
 		 */
-		private boolean autoMerge(Set<String> listToCopy) {
+		private Map<String, String> autoMerge(Set<String> listToCopy) {
 			String srcPath = null, destPath = null;
-			boolean success = true;
+			Map<String, String> failedFiles = new HashMap<>();
 			for (String filePath : listToCopy) {
 				srcPath = dbeaver_new_path + filePath;
 				destPath = dbstudioPath + filePath;
 				try {
 					FileUtils.copyFile(srcPath, destPath);
 				} catch (IOException e) {
-					success = false;
 					String errMsg = dbstudioPath + "\n" + dbeaver_new_path + "\n" + dbeaver_old_path;
 					logger.error(errMsg, e);
-					copyFailedFiles.put(srcPath, destPath);
+					failedFiles.put(srcPath, destPath);
 				}
 			}
-			return success;
+			return failedFiles;
 	    }
 
 		/**
@@ -309,11 +311,13 @@ public class VersionMergeTool {
 		}
 
 
-		public void printList(Set<String> diffFiles, String msg) {
+		public void printList(Set<String> files, String msg) {
 			System.out.println(msg);
-			System.out.println("File Size: " + diffFiles.size());
-			for (String string : diffFiles) {
-				System.out.println(string);
+			System.out.println("File Size: " + files.size());
+			// 排序后输出 字典序
+			TreeSet<String> treeSet = new TreeSet<>(files);
+			for (String file : treeSet) {
+				System.out.println(file);
 			}
 		}
 

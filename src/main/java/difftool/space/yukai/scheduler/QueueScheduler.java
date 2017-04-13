@@ -2,7 +2,7 @@ package difftool.space.yukai.scheduler;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import difftool.space.yukai.entity.DiffVersionHandler;
+import difftool.space.yukai.differ.DiffVersionHandler;
 /**
  * 无界队列
  * 文件数目巨大时可能内存溢出

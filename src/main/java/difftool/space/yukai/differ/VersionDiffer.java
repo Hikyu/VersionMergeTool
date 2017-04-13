@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import difftool.space.yukai.entity.DiffVersionHandler;
 import difftool.space.yukai.scheduler.QueueScheduler;
 import difftool.space.yukai.scheduler.Scheduler;
 import difftool.space.yukai.utils.FileUtils;

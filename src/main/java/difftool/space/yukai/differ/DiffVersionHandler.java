@@ -1,4 +1,4 @@
-package difftool.space.yukai.entity;
+package difftool.space.yukai.differ;
 
 import java.io.File;
 import java.io.IOException;

@@ -7,8 +7,7 @@ import java.util.List;
 import difflib.Chunk;
 import difflib.Delta;
 import difflib.DiffUtils;
-import difftool.space.yukai.entity.DiffVersionHandler;
-import difftool.space.yukai.entity.DiffVersionHandler.DiffVersion;
+import difftool.space.yukai.differ.DiffVersionHandler.DiffVersion;
 /**
  * 文件对比工具
  * @author kyu

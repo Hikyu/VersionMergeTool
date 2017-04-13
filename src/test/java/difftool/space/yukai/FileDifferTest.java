@@ -6,8 +6,8 @@ import java.util.List;
 import org.junit.Test;
 
 import difflib.Chunk;
+import difftool.space.yukai.differ.DiffVersionHandler;
 import difftool.space.yukai.differ.FileDiffer;
-import difftool.space.yukai.entity.DiffVersionHandler;
 
 public class FileDifferTest {
 	@Test
